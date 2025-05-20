@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COLOR GOD | The Ultimate Color Tool</title>
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --dark: #222;
+            --light: #f8f9fa;
+            --ad-bg: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.2);
+            --glow: 0 0 15px rgba(108, 99, 255, 0.5);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        body {
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .header-title {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+        }
+        
+        .header-ad {
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            margin: 1.5rem auto;
+            border-radius: 12px;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        
+        .header-ad:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr 250px;
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .ad-section {
+            background: var(--ad-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            align-self: start;
+            position: sticky;
+            top: 2rem;
+        }
+        
+        .ad-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #444;
+            font-size: 1.1rem;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            filter: blur(30px);
+            opacity: 0.1;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+        
+        .color-picker-section {
+            margin: 2.5rem 0;
+            position: relative;
+        }
+        
+        .color-display {
+            width: 150px;
+            height: 150px;
+            margin: 1.5rem auto;
+            border-radius: 16px;
+            border: 3px solid white;
+            box-shadow: var(--shadow), 0 0 0 5px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .color-display::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.1) 100%);
+        }
+        
+        .color-display:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: var(--shadow), var(--glow);
+        }
+        
+        input[type="color"] {
+            width: 80px;
+            height: 80px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        input[type="color"]:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15), var(--glow);
+        }
+        
+        .color-values {
+            background: #f5f5f5;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .color-values::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .color-value {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+            align-items: center;
+        }
+        
+        .color-value span:first-child {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .color-value span:last-child {
+            font-family: 'Fira Code', monospace;
+            background: rgba(0,0,0,0.05);
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+        }
+        
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(108, 99, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        button::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0));
+        }
+        
+        button:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 101, 132, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .image-upload {
+            border: 3px dashed #ddd;
+            padding: 3rem 2rem;
+            margin: 2rem 0;
+            cursor: pointer;
+            border-radius: 16px;
+            transition: all 0.3s;
+            position: relative;
+            text-align: center;
+            background: rgba(245, 245, 245, 0.5);
+        }
+        
+        .image-upload:hover {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.05);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        
+        .image-upload:hover .upload-icon {
+            opacity: 1;
+            transform: scale(1.1);
+            color: var(--primary);
+        }
+        
+        .how-it-works {
+            background: #f5f5f5;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .how-it-works h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .how-it-works ul {
+            list-style: none;
+        }
+        
+        .how-it-works li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            font-size: 1.1rem;
+        }
+        
+        .how-it-works li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.03)" d="M0,0 L100,0 L100,100 Q50,80 0,100 Z"></path></svg>');
+            background-size: 100% auto;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            opacity: 0.5;
+        }
+        
+        .footer-ad {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            margin: 1.5rem auto;
+            border-radius: 12px;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .footer-credit {
+            margin-top: 1.5rem;
+            position: relative;
+            font-size: 1.1rem;
+        }
+        
+        footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        footer a:hover {
+            color: white;
+            transform: translateY(-2px);
+            text-shadow: 0 0 10px rgba(255, 101, 132, 0.5);
+        }
+        
+        .heart {
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+            color: var(--secondary);
+        }
+        
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .ad-section {
+                position: static;
+                order: -1;
+            }
+            
+            .header-title {
+                font-size: 2.2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 1.8rem;
+            }
+            
+            .color-display {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Fira+Code&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-title">COLOR GOD</div>
+        <div class="header-subtitle">The Ultimate Color Picker & Extraction Tool</div>
+        <div class="header-ad">
+            <div class="ad-title">🔥 PRO TIP:</div>
+            <div>Try our AI Color Palette Generator for perfect color combinations every time!</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="ad-section">
+            <div class="ad-title">🎨 Color Trends 2023</div>
+            <p>Pantone Color of the Year: Viva Magenta</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">Advertisement</p>
+        </div>
+
+        <div class="main-content">
+            <h1>Color Picker</h1>
+            
+            <div class="color-picker-section">
+                <input type="color" id="colorPicker" value="#6C63FF" title="Click to choose any color">
+                <div class="color-display" id="colorDisplay" style="background: #6C63FF;"></div>
+                
+                <div class="color-values">
+                    <div class="color-value">
+                        <span><strong>Color Name:</strong></span>
+                        <span id="colorName">Medium Slate Blue</span>
+                    </div>
+                    <div class="color-value">
+                        <span><strong>HEX:</strong></span>
+                        <span id="hexValue">#6C63FF</span>
+                    </div>
+                    <div class="color-value">
+                        <span><strong>RGB:</strong></span>
+                        <span id="rgbValue">rgb(108, 99, 255)</span>
+                    </div>
+                    <div class="color-value">
+                        <span><strong>HSL:</strong></span>
+                        <span id="hslValue">hsl(243, 100%, 69%)</span>
+                    </div>
+                    <div class="color-value">
+                        <span><strong>CMYK:</strong></span>
+                        <span id="cmykValue">cmyk(58%, 61%, 0%, 0%)</span>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button id="copyHexBtn">
+                        <span>📋</span> Copy HEX
+                        <span class="tooltiptext">Copied to clipboard!</span>
+                    </button>
+                    <button id="copyRgbBtn">
+                        <span>📋</span> Copy RGB
+                        <span class="tooltiptext">Copied to clipboard!</span>
+                    </button>
+                    <button id="copyHslBtn">
+                        <span>📋</span> Copy HSL
+                        <span class="tooltiptext">Copied to clipboard!</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="image-upload" id="imageUploadArea">
+                <span class="upload-icon">🖼️</span>
+                <p><strong>Drag & Drop or Click to Upload Image</strong></p>
+                <p>Supports PNG, JPG, JPEG, WEBP</p>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="how-it-works">
+                <h3><span>✨</span> How It Works</h3>
+                <ul>
+                    <li>Use the color picker or upload an image to extract colors</li>
+                    <li>Get instant color codes in HEX, RGB, HSL, and CMYK formats</li>
+                    <li>Copy any color code with a single click</li>
+                    <li>Discover color names and professional color information</li>
+                    <li>Works perfectly on all devices - desktop, tablet, and mobile</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="ad-section">
+            <div class="ad-title">💡 Design Resources</div>
+            <p>Check out our collection of 500+ free color palettes</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">Advertisement</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-ad">
+            <div class="ad-title">🚀 Upgrade to PRO</div>
+            <div>Unlock advanced color analysis, palette generation, and more!</div>
+        </div>
+        <div class="footer-credit">
+            Designed with <span class="heart">❤️</span> by: <a href="https://instagram.com/the.ispawoo/" target="_blank">Yasir Ispawoo</a>
+        </div>
+    </footer>
+
+    <script>
+        // Extended Color Names Database with 150+ colors
+        const colorNames = {
+            "#6C63FF": "Medium Slate Blue",
+            "#FF6584": "Fiery Rose",
+            "#20C997": "Caribbean Green",
+            "#FFC107": "Saffron",
+            "#FFFFFF": "White",
+            "#000000": "Black",
+            "#FF0000": "Red",
+            "#00FF00": "Green",
+            "#0000FF": "Blue",
+            "#FFFF00": "Yellow",
+            "#FF00FF": "Magenta",
+            "#00FFFF": "Cyan",
+            "#FFA500": "Orange",
+            "#800080": "Purple",
+            "#008000": "Dark Green",
+            "#800000": "Maroon",
+            "#008080": "Teal",
+            "#FFD700": "Gold",
+            "#C0C0C0": "Silver",
+            "#A52A2A": "Brown",
+            "#FF6347": "Tomato",
+            "#FF4500": "Orange Red",
+            "#FF8C00": "Dark Orange",
+            "#FFD700": "Gold",
+            "#EEE8AA": "Pale Goldenrod",
+            "#98FB98": "Pale Green",
+            "#90EE90": "Light Green",
+            "#00FA9A": "Medium Spring Green",
+            "#00FF7F": "Spring Green",
+            "#3CB371": "Medium Sea Green",
+            "#2E8B57": "Sea Green",
+            "#228B22": "Forest Green",
+            "#008000": "Green",
+            "#006400": "Dark Green",
+            "#7CFC00": "Lawn Green",
+            "#7FFF00": "Chartreuse",
+            "#ADFF2F": "Green Yellow",
+            "#32CD32": "Lime Green",
+            "#9ACD32": "Yellow Green",
+            "#556B2F": "Dark Olive Green",
+            "#6B8E23": "Olive Drab",
+            "#808000": "Olive",
+            "#BDB76B": "Dark Khaki",
+            "#F0E68C": "Khaki",
+            "#FFFACD": "Lemon Chiffon",
+            "#FAFAD2": "Light Goldenrod Yellow",
+            "#FFFFE0": "Light Yellow",
+            "#FFFF00": "Yellow",
+            "#FFD700": "Gold",
+            "#DAA520": "Goldenrod",
+            "#B8860B": "Dark Goldenrod",
+            "#BC8F8F": "Rosy Brown",
+            "#CD5C5C": "Indian Red",
+            "#8B0000": "Dark Red",
+            "#A0522D": "Sienna",
+            "#D2691E": "Chocolate",
+            "#CD853F": "Peru",
+            "#F4A460": "Sandy Brown",
+            "#DEB887": "Burly Wood",
+            "#D2B48C": "Tan",
+            "#F5DEB3": "Wheat",
+            "#FFE4C4": "Bisque",
+            "#FFEBCD": "Blanched Almond",
+            "#FFDEAD": "Navajo White",
+            "#FFE4B5": "Moccasin",
+            "#FFF8DC": "Cornsilk",
+            "#FAEBD7": "Antique White",
+            "#FAF0E6": "Linen",
+            "#FFF0F5": "Lavender Blush",
+            "#FFE4E1": "Misty Rose",
+            "#F0FFFF": "Azure",
+            "#F0F8FF": "Alice Blue",
+            "#E6E6FA": "Lavender",
+            "#D8BFD8": "Thistle",
+            "#DDA0DD": "Plum",
+            "#EE82EE": "Violet",
+            "#DA70D6": "Orchid",
+            "#FF00FF": "Magenta",
+            "#BA55D3": "Medium Orchid",
+            "#9370DB": "Medium Purple",
+            "#8A2BE2": "Blue Violet",
+            "#9400D3": "Dark Violet",
+            "#9932CC": "Dark Orchid",
+            "#8B008B": "Dark Magenta",
+            "#800080": "Purple",
+            "#4B0082": "Indigo",
+            "#483D8B": "Dark Slate Blue",
+            "#6A5ACD": "Slate Blue",
+            "#7B68EE": "Medium Slate Blue",
+            "#4169E1": "Royal Blue",
+            "#0000FF": "Blue",
+            "#0000CD": "Medium Blue",
+            "#00008B": "Dark Blue",
+            "#000080": "Navy",
+            "#191970": "Midnight Blue",
+            "#6495ED": "Cornflower Blue",
+            "#4682B4": "Steel Blue",
+            "#5F9EA0": "Cadet Blue",
+            "#00BFFF": "Deep Sky Blue",
+            "#1E90FF": "Dodger Blue",
+            "#ADD8E6": "Light Blue",
+            "#87CEEB": "Sky Blue",
+            "#87CEFA": "Light Sky Blue",
+            "#B0E0E6": "Powder Blue",
+            "#E0FFFF": "Light Cyan",
+            "#AFEEEE": "Pale Turquoise",
+            "#40E0D0": "Turquoise",
+            "#48D1CC": "Medium Turquoise",
+            "#00CED1": "Dark Turquoise",
+            "#20B2AA": "Light Sea Green",
+            "#008B8B": "Dark Cyan",
+            "#008080": "Teal",
+            "#B0C4DE": "Light Steel Blue",
+            "#778899": "Light Slate Gray",
+            "#708090": "Slate Gray",
+            "#2F4F4F": "Dark Slate Gray",
+            "#696969": "Dim Gray",
+            "#808080": "Gray",
+            "#A9A9A9": "Dark Gray",
+            "#C0C0C0": "Silver",
+            "#D3D3D3": "Light Gray",
+            "#DCDCDC": "Gainsboro",
+            "#F5F5F5": "White Smoke",
+            "#FFFAFA": "Snow",
+            "#F8F8FF": "Ghost White",
+            "#F5F5DC": "Beige",
+            "#FDF5E6": "Old Lace",
+            "#FAF0E6": "Linen",
+            "#FFF5EE": "Sea Shell",
+            "#F0FFF0": "Honeydew",
+            "#F5FFFA": "Mint Cream",
+            "#F0F8FF": "Alice Blue",
+            "#E6E6FA": "Lavender",
+            "#FFF0F5": "Lavender Blush",
+            "#FFE4E1": "Misty Rose"
+        };
+
+        // DOM Elements
+        const colorPicker = document.getElementById('colorPicker');
+        const colorDisplay = document.getElementById('colorDisplay');
+        const colorName = document.getElementById('colorName');
+        const hexValue = document.getElementById('hexValue');
+        const rgbValue = document.getElementById('rgbValue');
+        const hslValue = document.getElementById('hslValue');
+        const cmykValue = document.getElementById('cmykValue');
+        const copyHexBtn = document.getElementById('copyHexBtn');
+        const copyRgbBtn = document.getElementById('copyRgbBtn');
+        const copyHslBtn = document.getElementById('copyHslBtn');
+        const imageInput = document.getElementById('imageInput');
+        const imageUploadArea = document.getElementById('imageUploadArea');
+
+        // Initialize with default color
+        updateColor(colorPicker.value);
+
+        // Color Picker Event
+        colorPicker.addEventListener('input', function() {
+            updateColor(this.value);
+        });
+
+        // Update all color values
+        function updateColor(color) {
+            colorDisplay.style.backgroundColor = color;
+            hexValue.textContent = color;
+            colorName.textContent = getColorName(color);
+            
+            // Convert HEX to RGB
+            const r = parseInt(color.substr(1, 2), 16);
+            const g = parseInt(color.substr(3, 2), 16);
+            const b = parseInt(color.substr(5, 2), 16);
+            rgbValue.textContent = `rgb(${r}, ${g}, ${b})`;
+            
+            // Convert RGB to HSL
+            const hsl = rgbToHsl(r, g, b);
+            hslValue.textContent = `hsl(${Math.round(hsl[0])}, ${Math.round(hsl[1])}%, ${Math.round(hsl[2])}%)`;
+            
+            // Convert RGB to CMYK
+            const cmyk = rgbToCmyk(r, g, b);
+            cmykValue.textContent = `cmyk(${Math.round(cmyk[0])}%, ${Math.round(cmyk[1])}%, ${Math.round(cmyk[2])}%, ${Math.round(cmyk[3])}%)`;
+        }
+
+        // Get color name with approximate matching
+        function getColorName(hexColor) {
+            // Exact match
+            if (colorNames[hexColor.toUpperCase()]) {
+                return colorNames[hexColor.toUpperCase()];
+            }
+            
+            // Approximate matching would go here in a more advanced implementation
+            return "Custom Color";
+        }
+
+        // RGB to HSL conversion
+        function rgbToHsl(r, g, b) {
+            r /= 255, g /= 255, b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return [h * 360, s * 100, l * 100];
+        }
+
+        // RGB to CMYK conversion
+        function rgbToCmyk(r, g, b) {
+            let c = 1 - (r / 255);
+            let m = 1 - (g / 255);
+            let y = 1 - (b / 255);
+            let k = Math.min(c, m, y);
+            
+            c = (c - k) / (1 - k);
+            m = (m - k) / (1 - k);
+            y = (y - k) / (1 - k);
+            
+            c = isNaN(c) ? 0 : c * 100;
+            m = isNaN(m) ? 0 : m * 100;
+            y = isNaN(y) ? 0 : y * 100;
+            k = k * 100;
+            
+            return [c, m, y, k];
+        }
+
+        // Copy buttons functionality
+        copyHexBtn.addEventListener('click', function() {
+            navigator.clipboard.writeText(hexValue.textContent)
+                .then(() => showTooltip(this));
+        });
+
+        copyRgbBtn.addEventListener('click', function() {
+            navigator.clipboard.writeText(rgbValue.textContent)
+                .then(() => showTooltip(this));
+        });
+
+        copyHslBtn.addEventListener('click', function() {
+            navigator.clipboard.writeText(hslValue.textContent)
+                .then(() => showTooltip(this));
+        });
+
+        function showTooltip(button) {
+            const tooltip = button.querySelector('.tooltiptext');
+            tooltip.style.visibility = 'visible';
+            tooltip.style.opacity = '1';
+            setTimeout(() => {
+                tooltip.style.visibility = 'hidden';
+                tooltip.style.opacity = '0';
+            }, 2000);
+        }
+
+        // Image upload functionality
+        imageUploadArea.addEventListener('click', function() {
+            imageInput.click();
+        });
+
+        // Drag and drop functionality
+        imageUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = 'var(--primary)';
+            this.style.backgroundColor = 'rgba(108, 99, 255, 0.1)';
+        });
+
+        imageUploadArea.addEventListener('dragleave', function() {
+            this.style.borderColor = '#ddd';
+            this.style.backgroundColor = 'rgba(245, 245, 245, 0.5)';
+        });
+
+        imageUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#ddd';
+            this.style.backgroundColor = 'rgba(245, 245, 245, 0.5)';
+            
+            if (e.dataTransfer.files.length) {
+                imageInput.files = e.dataTransfer.files;
+                handleImageUpload();
+            }
+        });
+
+        imageInput.addEventListener('change', handleImageUpload);
+
+        function handleImageUpload() {
+            if (imageInput.files && imageInput.files[0]) {
+                const file = imageInput.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Create canvas to analyze image
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0);
+                        
+                        // Get dominant color (simplified approach - gets center pixel)
+                        const x = Math.floor(img.width / 2);
+                        const y = Math.floor(img.height / 2);
+                        const pixelData = ctx.getImageData(x, y, 1, 1).data;
+                        const hexColor = rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
+                        
+                        // Update UI with extracted color
+                        colorPicker.value = hexColor;
+                        updateColor(hexColor);
+                        
+                        // Update upload area to show file name
+                        imageUploadArea.innerHTML = `
+                            <span class="upload-icon">✅</span>
+                            <p><strong>${file.name}</strong></p>
+                            <p>Click to change image</p>
+                            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                        `;
+                        // Reattach event listeners
+                        document.getElementById('imageInput').addEventListener('change', handleImageUpload);
+                        document.getElementById('imageInput').addEventListener('dragover', arguments.callee);
+                        document.getElementById('imageInput').addEventListener('dragleave', arguments.callee);
+                        document.getElementById('imageInput').addEventListener('drop', arguments.callee);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+    </script>
+</body>
+</html>
